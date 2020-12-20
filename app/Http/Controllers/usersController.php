@@ -14,10 +14,9 @@ class usersController extends Controller
      */
     public function index()
     {
-        $users =users::select(['id'])
-        ->where('deleted_at', null)
+        $users =users::select(['id'])->where('deleted_at', null)
         ->with(['files' => function ($query) {
-            $query->select(['id','file_name','url','created_at','user_id'])->where("deleted_at",null);
+            $query->where("deleted_at",null);
         }])->get();
      
       
@@ -25,15 +24,7 @@ class usersController extends Controller
         return  $users;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+   
 
     /**
      * Store a newly created resource in storage.

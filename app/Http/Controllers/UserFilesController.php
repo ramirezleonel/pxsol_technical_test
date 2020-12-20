@@ -19,16 +19,6 @@ class UserFilesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -36,9 +26,29 @@ class UserFilesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $request->validate([
+        //     'file' => 'required|mimes:pdf,xlx,csv,png,jpg,jpeg|max:2048',
+        // ]);
+        // $fileName = time().'.'.$request->file->extension();  
+        // $request->file->move(public_path('uploads'), $fileName);
+        // return 200;
+        return ["result" => "pass"];
     }
 
+      /**
+     * Save new file.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function saveFile(Request $request)
+    {
+    
+        $result = $request->file('file')->storeAs('public',$request->file->getClientOriginalName());
+        return ["result" => $result];
+      
+    }
+    
     /**
      * Display the specified resource.
      *

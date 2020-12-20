@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource("users","usersController");
 Route::apiResource("userFiles","UserFilesController");
+Route::post("userFiles/saveFile","UserFilesController@saveFile");
