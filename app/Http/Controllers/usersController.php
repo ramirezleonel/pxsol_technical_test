@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\user_files;
+use App\users;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-class UserFilesController extends Controller
+
+class usersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class UserFilesController extends Controller
      */
     public function index()
     {
-        $user_files = user_files::all();
-        return  $user_files;
+        $users = users::all();
+        return  $users;
     }
 
     /**
@@ -45,16 +45,9 @@ class UserFilesController extends Controller
      * @param  \App\user_files  $user_files
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(user_files $user_files)
     {
-        $query = DB::select((DB::raw("SELECT id as user_id FROM users where id={$id} and deleted_at is null")));
-    
-        $query2 = DB::select(DB::raw("SELECT id,file_name,url,created_at FROM user_files where user_id={$id} and deleted_at is null"));
-        $json = collect($query[0]);
-    
-        $json["files"]= $query2;
-
-        return $json;
+        //
     }
 
     /**
