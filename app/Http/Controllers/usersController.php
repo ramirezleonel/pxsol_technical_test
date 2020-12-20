@@ -14,7 +14,14 @@ class usersController extends Controller
      */
     public function index()
     {
-        $users = users::all();
+        $users =users::select(['id'])
+        ->where('deleted_at', null)
+        ->with(['files' => function ($query) {
+            $query->select(['id','file_name','url','created_at','user_id'])->where("deleted_at",null);
+        }])->get();
+     
+      
+        // $users = users::all();
         return  $users;
     }
 

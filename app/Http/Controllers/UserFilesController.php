@@ -51,7 +51,6 @@ class UserFilesController extends Controller
     
         $query2 = DB::select(DB::raw("SELECT id,file_name,url,created_at FROM user_files where user_id={$id} and deleted_at is null"));
         $json = collect($query[0]);
-    
         $json["files"]= $query2;
 
         return $json;
