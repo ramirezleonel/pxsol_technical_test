@@ -14,12 +14,16 @@ class usersController extends Controller
      */
     public function index()
     {
-        $users =users::select(['id'])->where('deleted_at', null)
-        ->with(['files' => function ($query) {
-            $query->where("deleted_at",null);
-        }])->get();
-
-        return  $users;
+        try{
+            $users =users::select(['id'])->where('deleted_at', null)
+            ->with(['files' => function ($query) {
+                $query->where("deleted_at",null);
+            }])->get();
+            return  response()->json($users,200);
+        }catch(Exception $ex){
+            return  response()->json(500);
+        }
+      
     }
 
    
