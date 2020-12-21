@@ -44,8 +44,8 @@ class UserFilesController extends Controller
                     ->where('id', 1)
                     ->with(['files' => function ($query) {
                         $query->where("deleted_at",null)
-                        ->orderBy('created_at','desc')
-                        ->orderBy('file_name','desc');
+                        ->orderBy('created_at','asc')
+                        ->orderBy('file_name','asc');
                     }])->first();
                    
                 $json["user_id"] = $user_files->id;
