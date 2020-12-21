@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\user_files;
+use App\users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 class UserFilesController extends Controller
 {
     /**
@@ -16,6 +18,7 @@ class UserFilesController extends Controller
     {
         $user_files = user_files::all();
         return  $user_files;
+    
     }
 
     /**
@@ -26,13 +29,7 @@ class UserFilesController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'file' => 'required|mimes:pdf,xlx,csv,png,jpg,jpeg|max:2048',
-        // ]);
-        // $fileName = time().'.'.$request->file->extension();  
-        // $request->file->move(public_path('uploads'), $fileName);
-        // return 200;
-        return ["result" => "pass"];
+       
     }
 
       /**
@@ -43,10 +40,32 @@ class UserFilesController extends Controller
      */
     public function saveFile(Request $request)
     {
-    
-        $result = $request->file('file')->storeAs('public',$request->file->getClientOriginalName());
-        return ["result" => $result];
-      
+        if($request->file != null && $request->user_id != null){
+
+            $result = $request->file('file')->storeAs('public',$request->file->getClientOriginalName());
+            $path = Storage::disk('files')->getAdapter()->getPathPrefix();
+
+            $uploaded_file=  user_files::create([
+                    'user_id'=> $request->user_id,
+                    'file_name'=> $request->file->getClientOriginalName() ,
+                    'url'=> $path . $request->file->getClientOriginalName(),
+                    ]
+            );
+            $user_files =users::where('deleted_at', null)
+                ->where('id', 1)
+                ->with(['files' => function ($query) {
+                    $query->where("deleted_at",null)
+                    ->orderBy('created_at','desc')
+                    ->orderBy('file_name','desc');
+                }])->first();
+               
+            $json["user_id"] = $user_files->id;
+            $json["uploaded_file"] = $uploaded_file;
+            $json["files"] = $user_files->files;
+               
+                return $json;
+        }
+        return ["result" => "404"];
     }
     
     /**

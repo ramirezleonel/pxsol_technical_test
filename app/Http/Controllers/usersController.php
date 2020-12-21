@@ -18,9 +18,7 @@ class usersController extends Controller
         ->with(['files' => function ($query) {
             $query->where("deleted_at",null);
         }])->get();
-     
-      
-        // $users = users::all();
+
         return  $users;
     }
 
